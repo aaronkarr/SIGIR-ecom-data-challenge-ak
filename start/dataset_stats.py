@@ -11,9 +11,9 @@ from datetime import datetime
 
 
 # put here the file paths if you did not unzip in same folder
-BROWSING_FILE_PATH = 'browsing_train_sample.csv'
-SEARCH_TRAIN_PATH = 'search_train_sample.csv'
-SKU_2_CONTENT_PATH = 'sku_to_content_sample.csv'
+BROWSING_FILE_PATH = "data/train/browsing_train.csv"
+SEARCH_TRAIN_PATH = "data/train/search_train.csv"
+SKU_2_CONTENT_PATH = "data/train/sku_to_content.csv"
 
 
 def get_rows(file_path: str, print_limit: int = 2):
@@ -38,9 +38,7 @@ def get_rows(file_path: str, print_limit: int = 2):
 
 
 def get_descriptive_stats(
-        browsing_train_path : str,
-        search_train_path: str,
-        sku_2_content_path: str
+    browsing_train_path: str, search_train_path: str, sku_2_content_path: str
 ):
     """
     Simple function showing how to read the main training files, print out some
@@ -63,20 +61,54 @@ def get_descriptive_stats(
     print("# {} products".format(len(sku_mapping)))
     # now do some counts
     print("\n\n=============== COUNTS ===============")
-    print("# {} of distinct SKUs with interactions".format(
-        len(set([r['product_sku_hash'] for r in browsing_events if r['product_sku_hash']]))))
-    print("# {} of add-to-cart events".format(sum(1 for r in browsing_events if r['product_action'] == 'add')))
-    print("# {} of purchase events".format(sum(1 for r in browsing_events if r['product_action'] == 'purchase')))
-    print("# {} of total interactions".format(sum(1 for r in browsing_events if r['product_action'])))
-    print("# {} of distinct sessions".format(
-        len(set([r['session_id_hash'] for r in browsing_events if r['session_id_hash']]))))
+    print(
+        "# {} of distinct SKUs with interactions".format(
+            len(
+                set(
+                    [
+                        r["product_sku_hash"]
+                        for r in browsing_events
+                        if r["product_sku_hash"]
+                    ]
+                )
+            )
+        )
+    )
+    print(
+        "# {} of add-to-cart events".format(
+            sum(1 for r in browsing_events if r["product_action"] == "add")
+        )
+    )
+    print(
+        "# {} of purchase events".format(
+            sum(1 for r in browsing_events if r["product_action"] == "purchase")
+        )
+    )
+    print(
+        "# {} of total interactions".format(
+            sum(1 for r in browsing_events if r["product_action"])
+        )
+    )
+    print(
+        "# {} of distinct sessions".format(
+            len(
+                set(
+                    [
+                        r["session_id_hash"]
+                        for r in browsing_events
+                        if r["session_id_hash"]
+                    ]
+                )
+            )
+        )
+    )
     # now run some tests
     print("\n\n*************** TESTS ***************")
     for r in browsing_events:
-        assert len(r['session_id_hash']) == 64
-        assert not r['product_sku_hash'] or len(r['product_sku_hash']) == 64
+        assert len(r["session_id_hash"]) == 64
+        assert not r["product_sku_hash"] or len(r["product_sku_hash"]) == 64
     for p in sku_mapping:
-        assert not p['price_bucket'] or float(p['price_bucket']) <= 10
+        assert not p["price_bucket"] or float(p["price_bucket"]) <= 10
     # say goodbye
     print("All done at {}: see you, space cowboy!".format(datetime.utcnow()))
 
@@ -84,8 +116,4 @@ def get_descriptive_stats(
 
 
 if __name__ == "__main__":
-    get_descriptive_stats(
-        BROWSING_FILE_PATH,
-        SEARCH_TRAIN_PATH,
-        SKU_2_CONTENT_PATH
-    )
+    get_descriptive_stats(BROWSING_FILE_PATH, SEARCH_TRAIN_PATH, SKU_2_CONTENT_PATH)
